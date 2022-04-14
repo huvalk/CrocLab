@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Release.Name }}-nginx
+    labels:
+        app: nginx
+spec:
+    replicas: {{ .Values.nginx.replicaCount }} 
+    selector:
+        matchLabels:
+            run: nginx
+    template:
+        metadata:
+            name: nginx
+            labels:
+                env: dev
+                project: playground
+                run: nginx
+                owner: huvalk
+        spec:
+            containers:
+                - name: container-nginx
+                  image: {{ .Values.nginx.image }}
+                  ports:
+                      - containerPort: 8080

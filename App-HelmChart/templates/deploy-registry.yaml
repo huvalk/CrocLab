@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Release.Name }}-registry
+    labels:
+        app: registry
+spec:
+    selector:
+        matchLabels:
+            run: registry
+    replicas: {{ .Values.registry.replicaCount }} 
+    template:
+        metadata:
+            name: registry
+            labels:
+                env: dev
+                owner: huvalk
+                run: registry
+                project: playground
+        spec:
+            containers:
+                - name: registry-container
+                  image: registry:2
+                  ports:
+                      - containerPort: 5000
+                  env:
+                      - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+                        value: "/data"
+                      #- name: REGISTRY_HTTP_TLS_CERTIFICATE
+                      #  value: "/certs/domain.crt"
+                      #- name: "REGISTRY_HTTP_TLS_KEY"
+                      #  value: "/certs/domain.key"

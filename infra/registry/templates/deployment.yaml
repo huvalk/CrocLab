@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repo-k8s
+  labels:
+    app: repo-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repo-k8s
+  template:
+    metadata:
+      labels:
+        app: repo-k8s
+    spec:
+      volumes:
+      - name: registry
+        persistentVolumeClaim:
+          claimName: registry-pvc
+      containers:
+        - image: registry:2
+          name: repo-k8s
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: REGISTRY_HTTP_TLS_CERTIFICATE
+            value: "/storage/certs/registry.crt"
+          - name: REGISTRY_HTTP_TLS_KEY
+            value: "/storage/certs/registry.key"
+          - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+            value: "/storage/registry"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+          - name: registry
+            mountPath: /storage/

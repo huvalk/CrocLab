@@ -1,13 +1,13 @@
 version: "2.1"
 services:
-  nfs:
+  registry-nfs:
     image: itsthenetwork/nfs-server-alpine:12
-    container_name: nfs
+    container_name: registry-nfs
     restart: unless-stopped
     privileged: true
     environment:
       - SHARED_DIRECTORY=/data
     volumes:
-      - /data/nfs-storage:/data
+      - /data/nfs-storage/:/data
     ports:
       - 2049:2049
